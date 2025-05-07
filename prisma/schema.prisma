@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String       @id @default(uuid())
+  name        String       @unique
+  email       String       @unique
+  createdAt   DateTime     @default(now())
+  password    String
+  role        String       @default("user")
+  predictions Prediction[]
+}
+
+model Game {
+  id          String       @id @default(uuid())
+  team1       String
+  team2       String
+  team1Logo   String @default("https://example.com/default-logo.png") 
+  team2Logo   String @default("https://example.com/default-logo.png")
+  gameType    String @default("Friendly Match")
+  date        DateTime
+  predictions Prediction[]
+  isArchived  Boolean @default(false)
+}
+
+model Prediction {
+  id              String    @id @default(uuid())
+  gameId          String
+  predictionType  String? 
+  predictedTeam   String?  
+  losingTeam      String?  
+  goalDifference  Int
+  createdAt       DateTime  @default(now())
+  fullTimePoints  Int?       @default(0)
+  halfTimePoints  Int?       @default(0)
+  userId          String
+
+  game            Game      @relation(fields: [gameId], references: [id])
+  user            User      @relation(fields: [userId], references: [id])
+}
+
+model ArchivedGame {
+  id          String             @id
+  team1       String
+  team2       String
+  team1Logo   String             @default("https://example.com/default-logo.png")
+  team2Logo   String             @default("https://example.com/default-logo.png")
+  gameType    String             @default("Friendly Match")
+  date        DateTime
+  predictions ArchivedPrediction[]
+}
+
+model ArchivedPrediction {
+  id              String     @id
+  gameId          String
+  predictionType  String?
+  predictedTeam   String?
+  losingTeam      String?
+  goalDifference  Int
+  createdAt       DateTime   @default(now())
+  fullTimePoints  Int        @default(0)
+  halfTimePoints  Int        @default(0)
+  userId          String
+
+  game            ArchivedGame @relation(fields: [gameId], references: [id])
+}
