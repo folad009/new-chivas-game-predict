@@ -8,7 +8,7 @@ const HomeHero = () => {
           <img
             className="object-cover object-center w-[200px] h-[150px]"
             alt="hero"
-            src="/assets/img/chivas-regal-logo.png"
+            src="/assets/img/chivas-regal-logo-white.png"
           />
         </div>
         <h1 className="font-serif sm:text-4xl text-3xl mb-10 font-bold text-[#f9f9f9]">
