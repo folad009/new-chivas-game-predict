@@ -6,7 +6,7 @@ const HomeHero = () => {
       <div className="text-center lg:w-2/3 w-full">
         <div className="flex gap-5 w-[200px] items-center mb-10 justify-center mx-auto">
           <img
-            className="object-cover object-center w-[200px] h-[150px]"
+            className="object-cover object-center w-70"
             alt="hero"
             src="/assets/img/chivas-regal-logo-white.png"
           />
