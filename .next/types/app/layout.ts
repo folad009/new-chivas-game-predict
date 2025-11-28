@@ -1,4 +1,4 @@
-// File: /Users/mac/Desktop/Projects/chivas-game-predict/app/layout.js
+// File: /Users/mac/Desktop/Projects/new-chivas-game-predict/app/layout.js
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

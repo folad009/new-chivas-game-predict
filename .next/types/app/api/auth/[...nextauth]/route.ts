@@ -1,4 +1,4 @@
-// File: /Users/mac/Desktop/Projects/chivas-game-predict/app/api/auth/[...nextauth]/route.js
+// File: /Users/mac/Desktop/Projects/new-chivas-game-predict/app/api/auth/[...nextauth]/route.js
 import * as entry from '../../../../../../app/api/auth/[...nextauth]/route.js'
 import type { NextRequest } from 'next/server.js'
 

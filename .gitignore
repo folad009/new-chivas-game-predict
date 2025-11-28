@@ -1,2 +1,42 @@
-node_modules
-node_modules
+# Node.js dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE settings
+.vscode/
+.idea/
+*.swp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Coverage reports
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
+
+# React specific
+.cache/
+
+# Misc
+*.bak

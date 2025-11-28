@@ -1,4 +1,4 @@
-// File: /Users/mac/Desktop/Projects/chivas-game-predict/app/auth/page.jsx
+// File: /Users/mac/Desktop/Projects/new-chivas-game-predict/app/auth/page.jsx
 import * as entry from '../../../../app/auth/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
