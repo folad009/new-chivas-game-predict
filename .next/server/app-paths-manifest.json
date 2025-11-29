@@ -1,8 +1,9 @@
 {
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/api/prizes/route": "app/api/prizes/route.js",
-  "/api/admin/games/route": "app/api/admin/games/route.js",
-  "/page": "app/page.js",
+  "/api/clear-leaderboard/route": "app/api/clear-leaderboard/route.js",
+  "/api/leaderboard/route": "app/api/leaderboard/route.js",
+  "/api/admin/predictions/route": "app/api/admin/predictions/route.js",
   "/auth/page": "app/auth/page.js",
-  "/games/page": "app/games/page.js"
+  "/admin/award-points/page": "app/admin/award-points/page.js",
+  "/leaderboard/page": "app/leaderboard/page.js"
 }

@@ -19,7 +19,11 @@ const MenuButton = ({ onClick }) => (
       stroke="currentColor"
       strokeWidth="2"
     >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M4 6h16M4 12h16M4 18h16"
+      />
     </svg>
   </button>
 );
@@ -30,7 +34,9 @@ const MobileMenu = ({ session }) => (
     <div className="mt-4 text-center">
       {session ? (
         <>
-          <p className="text-sm font-medium mb-2">Welcome, {session.user.name}</p>
+          <p className="text-sm font-medium mb-2">
+            Welcome, {session.user.name}
+          </p>
           <button
             onClick={() => signOut()}
             className="w-full bg-red-900 text-white py-2 rounded-md shadow hover:bg-red-950 transition text-sm"
@@ -47,16 +53,16 @@ const MobileMenu = ({ session }) => (
 
 // Header component that handles both desktop and mobile views
 const Header = ({ session, isMenuOpen, toggleMenu }) => (
-  <header className="bg-red-900 shadow-sm p-5 border-b-1 border-b-white">
-    <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+  <header className="bg-red-900 shadow-sm p-5 border-b border-b-white">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-5">
-              <img
-              src="/assets/img/chivas-regal-logo-white.png"
-              alt="betway logo"
-              className="w-[180px]"
-            />
-            </div>
+        <div className="flex items-center gap-5">
+          <img
+            src="/assets/img/chivas-regal-logo-white.png"
+            alt="betway logo"
+            className="w-[180px]"
+          />
+        </div>
         <MenuButton onClick={toggleMenu} />
         <div className="hidden md:flex items-center gap-4 text-white">
           {session ? (
@@ -67,7 +73,7 @@ const Header = ({ session, isMenuOpen, toggleMenu }) => (
               {session.user.role === "admin" && (
                 <a
                   href="/admin/award-points"
-                  className="bg-green-950 text-black px-4 py-2 rounded-md shadow hover:bg-black hover:text-white transition text-sm"
+                  className="bg-red-800 text-white px-4 py-2 rounded-md shadow hover:bg-red-950 hover:text-white transition text-sm"
                 >
                   Award Points
                 </a>
@@ -80,7 +86,10 @@ const Header = ({ session, isMenuOpen, toggleMenu }) => (
               </button>
             </>
           ) : (
-            <a href="/auth" className="bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-green-950 transition text-sm">
+            <a
+              href="/auth"
+              className="bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-green-950 transition text-sm"
+            >
               Sign In
             </a>
           )}
@@ -91,49 +100,95 @@ const Header = ({ session, isMenuOpen, toggleMenu }) => (
   </header>
 );
 
+
+
 export default function Leaderboard() {
   const [leaderboard, setLeaderboard] = useState([]);
   const [filteredLeaderboard, setFilteredLeaderboard] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [view, setView] = useState("half-time"); // Default to half-time
+  const [view, setView] = useState("half-time");
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // Show 10 rows per page
   const { data: session } = useSession();
   const router = useRouter();
 
-  // Fetch leaderboard data based on selected view (half-time or full-time)
+  // Fetch leaderboard data
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
         const res = await fetch(`/api/leaderboard?view=${view}`);
         if (!res.ok) throw new Error("Failed to fetch leaderboard data");
         const data = await res.json();
-        setLeaderboard(data.leaderboard || []);
-        setFilteredLeaderboard(data.leaderboard || []);
+
+        // Sort leaderboard by points based on view
+        const sortedData = [...(data.leaderboard || [])].sort((a, b) => {
+          const pointsA =
+            view === "half-time" ? a.halfTimePoints : a.fullTimePoints;
+          const pointsB =
+            view === "half-time" ? b.halfTimePoints : b.fullTimePoints;
+          return pointsB - pointsA; // Descending order
+        });
+
+        setLeaderboard(sortedData);
+        setFilteredLeaderboard(sortedData);
       } catch (err) {
         console.error("Error fetching leaderboard:", err);
       }
     };
     fetchLeaderboard();
-  }, [view]); // Refetch when view changes
+  }, [view]);
 
   // Filter leaderboard based on search query
   useEffect(() => {
-    setFilteredLeaderboard(
-      leaderboard.filter((player) =>
-        player.userName.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+    const filtered = leaderboard.filter((player) =>
+      player.userName.toLowerCase().includes(searchQuery.toLowerCase())
     );
+    setFilteredLeaderboard(filtered);
+    setCurrentPage(1); // Reset to first page on search
   }, [searchQuery, leaderboard]);
 
-  // Toggle menu visibility for mobile
+  // Pagination logic
+  const totalPages = Math.ceil(filteredLeaderboard.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentData = filteredLeaderboard.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+
+
+  const clearPredictions = async () => {
+  try {
+    const res = await fetch("/api/clear-leaderboard", {
+      method: "DELETE",
+    });
+    if (!res.ok) throw new Error("Failed to clear predictions");
+    setLeaderboard([]);
+    setFilteredLeaderboard([]);
+    setCurrentPage(1);
+    alert("Predictions cleared for new game!");
+  } catch (err) {
+    console.error(err);
+    alert("Error clearing predictions");
+  }
+};
 
   return (
     <>
-      <Header session={session} isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
-      <main
-        className="flex flex-col items-center justify-center min-h-screen px-4 text-center bg-red-900"
-      >
+      <Header
+        session={session}
+        isMenuOpen={isMenuOpen}
+        toggleMenu={toggleMenu}
+      />
+      <main className="flex flex-col items-center justify-center min-h-screen px-4 py-10 text-center bg-red-900">
         <h2 className="text-4xl font-bold mb-6 text-white">🏆 Leaderboard</h2>
 
         {/* Toggle between Half-Time and Full-Time */}
@@ -141,7 +196,9 @@ export default function Leaderboard() {
           <button
             onClick={() => setView("half-time")}
             className={`px-4 py-2 rounded-md cursor-pointer ${
-              view === "half-time" ? "bg-gray-900 text-white" : "bg-gray-200 text-red-900"
+              view === "half-time"
+                ? "bg-gray-900 text-white"
+                : "bg-gray-200 text-red-900"
             }`}
           >
             Half-Time Leaderboard
@@ -149,7 +206,9 @@ export default function Leaderboard() {
           <button
             onClick={() => setView("full-time")}
             className={`ml-4 px-4 py-2 rounded-md cursor-pointer ${
-              view === "full-time" ? "bg-red-950 text-white" : "bg-gray-200 text-red-900"
+              view === "full-time"
+                ? "bg-red-950 text-white"
+                : "bg-gray-200 text-red-900"
             }`}
           >
             Full-Time Leaderboard
@@ -169,35 +228,81 @@ export default function Leaderboard() {
 
         {/* Leaderboard table */}
         <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6 overflow-x-auto">
-          {filteredLeaderboard.length > 0 ? (
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-gray-200">
-                  <th className="p-2 border">#</th>
-                  <th className="p-2 border">Name</th>
-                  <th className="p-2 border">Points</th>
-                  <th className="p-2 border">Prediction Time</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredLeaderboard.map((player, index) => (
-                  <tr key={player.userId || index} className="hover:bg-gray-100">
-                    <td className="p-2 border">{index + 1}</td>
-                    <td className="p-2 border">{player.userName}</td>
-                    <td className="p-2 border">
-                      {view === "half-time"
-                        ? `${player.halfTimePoints} points`
-                        : `${player.fullTimePoints} points`}
-                    </td>
-                    <td className="p-2 border text-gray-500">{player.predictionTime}</td>
+          {currentData.length > 0 ? (
+            <>
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-gray-200">
+                    <th className="p-2 border">#</th>
+                    <th className="p-2 border">Name</th>
+                    <th className="p-2 border">Points</th>
+                    <th className="p-2 border">Prediction Time</th>
                   </tr>
+                </thead>
+                <tbody>
+                  {currentData.map((player, index) => (
+                    <tr
+                      key={`${player.userId ?? "player"}-${startIndex + index}`}
+                      className="hover:bg-gray-100"
+                    >
+                      <td className="p-2 border">{startIndex + index + 1}</td>
+                      <td className="p-2 border">{player.userName}</td>
+                      <td className="p-2 border">
+                        {view === "half-time"
+                          ? `${player.halfTimePoints} points`
+                          : `${player.fullTimePoints} points`}
+                      </td>
+                      <td className="p-2 border text-black">
+                        {player.predictionTime}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {/* Pagination controls */}
+              <div className="flex justify-center mt-4 space-x-2">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                >
+                  Prev
+                </button>
+                {[...Array(totalPages)].map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handlePageChange(i + 1)}
+                    className={`px-3 py-1 rounded ${
+                      currentPage === i + 1
+                        ? "bg-gray-900 text-white"
+                        : "bg-gray-200"
+                    }`}
+                  >
+                    {i + 1}
+                  </button>
                 ))}
-              </tbody>
-            </table>
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            </>
           ) : (
             <p className="text-gray-500">No leaderboard data available.</p>
           )}
         </div>
+
+        {/* Clear Leaderboard Button */}
+        <button
+          onClick={clearPredictions}
+          className="mt-4 bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 transition duration-300"
+        >
+          Clear Predictions for New Game
+        </button>
 
         <button
           onClick={() => router.push("/")}
