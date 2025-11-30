@@ -70,15 +70,15 @@ async function updatePrediction(prediction, actualWinningTeam, actualGoalDiffere
 }
 
 function calculatePoints(prediction, actualWinningTeam, actualGoalDifference, period) {
+    let points = 0;
+   let halfTimePoints = 0;
+
   if (period === "half-time") {
-    let halfTimePoints = 0;
     if (prediction.predictedTeam === actualWinningTeam) halfTimePoints += 50;
     if (prediction.goalDifference === actualGoalDifference) halfTimePoints += 40;
-    return { points: 0, halfTimePoints };
   }
 
   if (period === "full-time") {
-    let points = 0;
     const correctWinner = prediction.predictedTeam === actualWinningTeam;
     const correctDiff = prediction.goalDifference === actualGoalDifference;
     const isDraw = prediction.predictionType === "draw" && actualWinningTeam === "draw";
@@ -89,11 +89,12 @@ function calculatePoints(prediction, actualWinningTeam, actualGoalDifference, pe
     else if (correctWinner || isDraw) points = 50;
     else if (!correctWinner && !correctDiff) points = 0;
     else if (correctDiff) points = 25;
-
-    return { points, halfTimePoints: 0 };
+    else points = 0
   }
 
-  return { points: 0, halfTimePoints: 0 };
+  const totalpoints = points + halfTimePoints;
+
+  return { points, halfTimePoints, totalpoints };
 }
 
 async function calculateUserTotalPoints(userId) {
