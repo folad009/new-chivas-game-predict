@@ -220,6 +220,9 @@
   }
 }
 @layer utilities {
+  .absolute {
+    position: absolute;
+  }
   .relative {
     position: relative;
   }
@@ -228,6 +231,12 @@
   }
   .top-0 {
     top: calc(var(--spacing) * 0);
+  }
+  .top-16 {
+    top: calc(var(--spacing) * 16);
+  }
+  .left-0 {
+    left: calc(var(--spacing) * 0);
   }
   .container {
     width: 100%;
@@ -400,9 +409,6 @@
   .max-w-4xl {
     max-width: var(--container-4xl);
   }
-  .max-w-7 {
-    max-width: calc(var(--spacing) * 7);
-  }
   .max-w-7xl {
     max-width: var(--container-7xl);
   }
@@ -441,6 +447,9 @@
   }
   .items-center {
     align-items: center;
+  }
+  .items-start {
+    align-items: flex-start;
   }
   .justify-between {
     justify-content: space-between;
@@ -550,9 +559,6 @@
   .bg-green-900 {
     background-color: var(--color-green-900);
   }
-  .bg-green-950 {
-    background-color: var(--color-green-950);
-  }
   .bg-indigo-500 {
     background-color: var(--color-indigo-500);
   }
@@ -639,9 +645,6 @@
   }
   .py-10 {
     padding-block: calc(var(--spacing) * 10);
-  }
-  .py-20 {
-    padding-block: calc(var(--spacing) * 20);
   }
   .py-22 {
     padding-block: calc(var(--spacing) * 22);
@@ -1026,6 +1029,11 @@
       line-height: var(--tw-leading, var(--text-xl--line-height));
     }
   }
+  .md\:static {
+    @media (width >= 48rem) {
+      position: static;
+    }
+  }
   .md\:mt-0 {
     @media (width >= 48rem) {
       margin-top: calc(var(--spacing) * 0);
@@ -1061,6 +1069,11 @@
       height: 100%;
     }
   }
+  .md\:w-auto {
+    @media (width >= 48rem) {
+      width: auto;
+    }
+  }
   .md\:grid-cols-2 {
     @media (width >= 48rem) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1069,6 +1082,11 @@
   .md\:flex-row {
     @media (width >= 48rem) {
       flex-direction: row;
+    }
+  }
+  .md\:items-center {
+    @media (width >= 48rem) {
+      align-items: center;
     }
   }
   .md\:justify-start {
@@ -1081,6 +1099,16 @@
       gap: calc(var(--spacing) * 12);
     }
   }
+  .md\:bg-transparent {
+    @media (width >= 48rem) {
+      background-color: transparent;
+    }
+  }
+  .md\:p-0 {
+    @media (width >= 48rem) {
+      padding: calc(var(--spacing) * 0);
+    }
+  }
   .lg\:hidden {
     @media (width >= 64rem) {
       display: none;
@@ -1089,6 +1117,11 @@
   .lg\:w-2\/3 {
     @media (width >= 64rem) {
       width: calc(2/3 * 100%);
+    }
+  }
+  .lg\:w-\[500px\] {
+    @media (width >= 64rem) {
+      width: 500px;
     }
   }
   .lg\:p-8 {

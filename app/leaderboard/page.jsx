@@ -100,8 +100,6 @@ const Header = ({ session, isMenuOpen, toggleMenu }) => (
   </header>
 );
 
-
-
 export default function Leaderboard() {
   const [leaderboard, setLeaderboard] = useState([]);
   const [filteredLeaderboard, setFilteredLeaderboard] = useState([]);
@@ -164,22 +162,21 @@ export default function Leaderboard() {
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
-
   const clearPredictions = async () => {
-  try {
-    const res = await fetch("/api/clear-leaderboard", {
-      method: "DELETE",
-    });
-    if (!res.ok) throw new Error("Failed to clear predictions");
-    setLeaderboard([]);
-    setFilteredLeaderboard([]);
-    setCurrentPage(1);
-    alert("Predictions cleared for new game!");
-  } catch (err) {
-    console.error(err);
-    alert("Error clearing predictions");
-  }
-};
+    try {
+      const res = await fetch("/api/clear-leaderboard", {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Failed to clear predictions");
+      setLeaderboard([]);
+      setFilteredLeaderboard([]);
+      setCurrentPage(1);
+      alert("Predictions cleared for new game!");
+    } catch (err) {
+      console.error(err);
+      alert("Error clearing predictions");
+    }
+  };
 
   return (
     <>
@@ -297,12 +294,22 @@ export default function Leaderboard() {
         </div>
 
         {/* Clear Leaderboard Button */}
-        <button
-          onClick={clearPredictions}
-          className="mt-4 bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 transition duration-300"
-        >
-          Clear Predictions for New Game
-        </button>
+        {session?.user?.role === "admin" && (
+          <button
+            onClick={() => {
+              const confirmClear = window.confirm(
+                "Are you sure you want to clear the leaderboard? This action cannot be undone."
+              );
+              if (confirmClear) {
+                clearPredictions();
+                alert("Leaderboard has been cleared successfully!");
+              }
+            }}
+            className="mt-4 bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 transition duration-300"
+          >
+            Clear Predictions for New Game
+          </button>
+        )}
 
         <button
           onClick={() => router.push("/")}

@@ -31,21 +31,21 @@ export default function Games() {
 
   return (
     <>
-      <header className="bg-red-950 shadow-sm p-4 border-b-1 border-b-white">
-        <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+      <header className="bg-red-950 shadow-sm p-4 border-b border-b-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-5">
+            <div className="flex items-center justify-between">
               <img
-              src="/assets/img/chivas-regal-logo-white.png"
-              alt="betway logo"
-              className="w-[180px]"
-            />
+                src="/assets/img/chivas-regal-logo-white.png"
+                alt="betway logo"
+                className="w-[180px]"
+              />
             </div>
-            
 
             <button
-              className="block md:hidden bg-gray-100 p-2 rounded text-gray-600 transition hover:text-gray-800"
+              className="md:hidden bg-gray-100 p-2 rounded text-gray-600 hover:text-gray-800 transition"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle navigation"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -63,46 +63,45 @@ export default function Games() {
               </svg>
             </button>
 
-            <div
-              className={`${
-                isMenuOpen ? "block" : "hidden"
-              } md:flex items-center gap-4 text-white`}
+            <nav
+              className={`absolute md:static top-16 left-0 w-full md:w-auto md:bg-transparent 
+        ${
+          isMenuOpen ? "block" : "hidden"
+        } md:flex flex-col md:flex-row items-start md:items-center gap-4 p-4 md:p-0 text-white`}
             >
               {session ? (
                 <>
-                  <p className="text-sm font-medium">
+                  <p className="text-sm font-medium mb-4 md:mb-0">
                     Welcome,{" "}
                     <span className="font-black">{session.user.name}</span>
                   </p>
                   {session.user.role === "admin" && (
-                    <a
-                      href="/admin/award-points"
-                      className="bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black hover:text-white transition text-sm"
-                    >
-                      Award Points
-                    </a>
-                  )}
-
-                  {session.user.role === "admin" && (
-                    <a
-                      href="/admin/add-games"
-                      className="bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black hover:text-white transition text-sm"
-                    >
-                      Add Game
-                    </a>
-                  )}
-
-                  {session.user.role === "admin" && (
-                    <a
-                      href="/admin/archive"
-                      className="bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black hover:text-white transition text-sm"
-                    >
-                      Archive Games
-                    </a>
+                    <>
+                      <div className="flex items-center justify-between mb-4">
+                        <a
+                          href="/admin/award-points"
+                          className="bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black hover:text-white transition text-sm"
+                        >
+                          Award Points
+                        </a>
+                        <a
+                          href="/admin/add-games"
+                          className="bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black hover:text-white transition text-sm"
+                        >
+                          Add Game
+                        </a>
+                        <a
+                          href="/admin/archive"
+                          className="bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black hover:text-white transition text-sm"
+                        >
+                          Archive Games
+                        </a>
+                      </div>
+                    </>
                   )}
                   <button
                     onClick={onSignOut}
-                    className="bg-red-900 text-white px-4 py-2 rounded-md shadow hover:bg-gray-900 transition text-sm"
+                    className="bg-red-900 px-4 py-2 rounded-md shadow hover:bg-gray-900 transition text-sm"
                   >
                     Sign Out
                   </button>
@@ -112,7 +111,7 @@ export default function Games() {
                   <a href="/auth">Sign in</a>
                 </button>
               )}
-            </div>
+            </nav>
           </div>
         </div>
       </header>
@@ -166,7 +165,7 @@ export default function Games() {
 
               <button
                 onClick={() => router.push("/")}
-                className="mt-4 bg-black text-white px-4 py-2 rounded hover:bg-gray-900 cursor-pointer"
+                className="mt-4 bg-black text-white px-4 py-2 rounded hover:bg-gray-900 transition"
               >
                 Back to Home
               </button>
@@ -174,10 +173,10 @@ export default function Games() {
           )}
 
           {selectedGame && (
-            <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-4">
+            <div className="w-full bg-white shadow-lg rounded-lg p-4">
               <button
                 onClick={() => setSelectedGame(null)}
-                className="bg-green-900 text-white px-4 py-2 rounded mb-4 hover:bg-gray-900 cursor-pointer"
+                className="w-full bg-white shadow-lg rounded-lg p-4"
               >
                 Back to Games
               </button>
@@ -185,9 +184,9 @@ export default function Games() {
             </div>
           )}
         </div>
-        <div>
+        <div className="w-full lg:w-[500px] flex justify-center">
           <img
-            className="w-full sm:w-[500px] mx-auto"
+            
             src="/assets/img/betway-img-banner-1.png"
             alt="Chivas Logo"
           />
