@@ -83,10 +83,11 @@ function calculatePoints(prediction, actualWinningTeam, actualGoalDifference, pe
     const correctDiff = prediction.goalDifference === actualGoalDifference;
     const isDraw = prediction.predictionType === "draw" && actualWinningTeam === "draw";
 
-    if (correctWinner && correctDiff) points = 100;
+    if (correctWinner && correctDiff) points = 150;
     else if (correctWinner && !correctDiff) points = 75;
     else if (isDraw && actualGoalDifference === 0) points = 100;
     else if (correctWinner || isDraw) points = 50;
+    else if (!correctWinner && !correctDiff) points = 0;
     else if (correctDiff) points = 25;
 
     return { points, halfTimePoints: 0 };
