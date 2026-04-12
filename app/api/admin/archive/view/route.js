@@ -18,7 +18,26 @@ export async function GET() {
       orderBy: { date: "desc" },
     });
 
-    return NextResponse.json({ archivedGames }, { status: 200 });
+    const userIds = [
+      ...new Set(
+        archivedGames.flatMap((g) => g.predictions.map((p) => p.userId))
+      ),
+    ];
+    const users = await prisma.user.findMany({
+      where: { id: { in: userIds } },
+      select: { id: true, name: true },
+    });
+    const userById = Object.fromEntries(users.map((u) => [u.id, u]));
+
+    const enriched = archivedGames.map((g) => ({
+      ...g,
+      predictions: g.predictions.map((p) => ({
+        ...p,
+        user: userById[p.userId] ?? { name: "Unknown User" },
+      })),
+    }));
+
+    return NextResponse.json({ archivedGames: enriched }, { status: 200 });
   } catch (error) {
     console.error("Failed to fetch archived games:", error);
     return NextResponse.json(

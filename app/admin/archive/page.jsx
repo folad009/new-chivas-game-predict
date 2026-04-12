@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const ArchivePage = () => {
   const [games, setGames] = useState([]);
@@ -10,17 +10,43 @@ const ArchivePage = () => {
   const [dateFilter, setDateFilter] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [archiveMessage, setArchiveMessage] = useState("");
+  const [archiving, setArchiving] = useState(false);
 
   const itemsPerPage = 10;
 
-  useEffect(() => {
+  const loadArchivedGames = useCallback(() => {
+    setLoading(true);
     fetch("/api/admin/archive/view")
       .then((res) => res.json())
       .then((data) => {
         setGames(data.archivedGames || []);
         setLoading(false);
-      });
+      })
+      .catch(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    loadArchivedGames();
+  }, [loadArchivedGames]);
+
+  const handleMovePastGamesToArchive = async () => {
+    setArchiveMessage("");
+    setArchiving(true);
+    try {
+      const res = await fetch("/api/admin/archive", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Request failed");
+      setArchiveMessage(
+        `Moved ${data.archivedCount ?? 0} of ${data.totalFound ?? 0} past game(s) to archive.`
+      );
+      loadArchivedGames();
+    } catch (e) {
+      setArchiveMessage(e.message || "Could not archive games.");
+    } finally {
+      setArchiving(false);
+    }
+  };
 
   useEffect(() => {
     let filtered = [...games];
@@ -97,6 +123,25 @@ const ArchivePage = () => {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Archived Games</h1>
+
+      <div className="mb-6 flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          onClick={handleMovePastGamesToArchive}
+          disabled={archiving}
+          className="bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white px-4 py-2 rounded"
+        >
+          {archiving ? "Archiving…" : "Move past games to archive"}
+        </button>
+        <p className="text-sm text-gray-600 max-w-xl">
+          Moves every game whose date is before today from the live list into
+          this archive (predictions are kept). Then you can add a new upcoming
+          game from Add Game.
+        </p>
+      </div>
+      {archiveMessage && (
+        <p className="text-sm mb-4 text-gray-800">{archiveMessage}</p>
+      )}
 
       {/* Filters */}
       <div className="flex flex-wrap gap-4 mb-6">

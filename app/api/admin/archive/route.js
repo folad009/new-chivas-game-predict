@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/route";
 import { NextResponse } from "next/server";
-import { archiveOldGamesAndPredictions } from "@/libs/archiveServices";
+import { movePastGamesToArchive } from "@/libs/archiveServices";
 
 
 
@@ -13,12 +13,12 @@ export async function POST(req) {
     }
 
     try {
-       const result = await archiveOldGamesAndPredictions() 
+       const result = await movePastGamesToArchive();
 
        return NextResponse.json(
-        {message: "Archived successfully", ...result},
-        {status: 200}
-       )
+        { message: "Past games moved to archive", ...result },
+        { status: 200 }
+       );
     } catch (error) {
         return NextResponse.json(
             { error: error.message || "Archiving failed" },
