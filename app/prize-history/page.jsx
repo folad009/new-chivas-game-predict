@@ -31,14 +31,14 @@ const PrizeHistory = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
-      <h2 className="text-2xl font-bold mb-6">🏆 Prize History</h2>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-3 sm:px-4 py-6">
+      <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center">🏆 Prize History</h2>
 
-      <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
+      <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-4 sm:p-6">
         {history.length > 0 ? (
           <ul className="space-y-3">
             {history.map((entry, index) => (
-              <li key={index} className="p-3 border-b flex justify-between items-center">
+              <li key={index} className="p-3 border-b flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                 <div>
                   <span className="font-semibold">{entry.prize}</span> <br />
                   <span className="text-gray-500 text-sm">{entry.date}</span>
@@ -48,7 +48,7 @@ const PrizeHistory = () => {
                 ) : (
                   <button
                     onClick={() => claimPrize(entry.id)}
-                    className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                    className="w-full sm:w-auto bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
                   >
                     Claim
                   </button>
@@ -64,7 +64,7 @@ const PrizeHistory = () => {
       {/* Back to Home Button */}
       <button
         onClick={() => router.push("/")}
-        className="mt-6 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        className="mt-6 w-full max-w-md bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
       >
        Back to Live
       </button>

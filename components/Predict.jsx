@@ -82,8 +82,8 @@ export default function Predict() {
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4 text-green-900">
+    <div className="p-3 sm:p-4">
+      <h2 className="text-lg sm:text-xl font-bold mb-4 text-green-900">
         Submit Your Prediction
       </h2>
 
@@ -97,7 +97,7 @@ export default function Predict() {
             .map((game) => (
               <div
                 key={game.id}
-                className={`cursor-pointer p-2 mb-2 border rounded shadow-md text-red-900 dark:text-white dark:border-red-900  ${
+                className={`cursor-pointer p-2.5 mb-2 border rounded shadow-md text-sm sm:text-base text-red-900 dark:text-white dark:border-red-900  ${
                   selectedGame?.id === game.id
                     ? "bg-white"
                     : "hover:bg-red-900 hover:text-white"
@@ -115,8 +115,8 @@ export default function Predict() {
 
       {/* Prediction form */}
       {selectedGame && (
-        <div className="mt-4 p-4 border rounded shadow-md bg-white">
-          <h3 className="text-lg font-semibold mb-3 text-red-950">
+        <div className="mt-4 p-3 sm:p-4 border rounded shadow-md bg-white">
+          <h3 className="text-base sm:text-lg font-semibold mb-3 text-red-950">
             Predict the outcome for <br />
             {selectedGame.team1} vs {selectedGame.team2}
           </h3>
@@ -159,7 +159,7 @@ export default function Predict() {
                     setLosingTeam(""); // Reset if no valid selection
                   }
                 }}
-                className="border p-2 w-full mb-3 text-red-900"
+                className="border p-2.5 text-sm w-full mb-3 text-red-900"
               >
                 <option value="">Select Team</option>
                 <option value={selectedGame.team1}>{selectedGame.team1}</option>
@@ -174,7 +174,7 @@ export default function Predict() {
                   <select
                     value={losingTeam}
                     onChange={(e) => setLosingTeam(e.target.value)}
-                    className="border p-2 w-full mb-3 text-green-900"
+                    className="border p-2.5 text-sm w-full mb-3 text-green-900"
                     disabled // Disable manual selection of losing team
                   >
                     <option value="">Select Team</option>
@@ -196,14 +196,14 @@ export default function Predict() {
             type="number"
             value={goalDifference}
             onChange={(e) => setGoalDifference(e.target.value)}
-            className="border p-2 w-full mb-3 text-red-900"
+            className="border p-2.5 text-sm w-full mb-3 text-red-900"
             min="0"
             disabled={isDraw} // Disable input if it's a draw
           />
 
           <button
             onClick={submitPrediction}
-            className="bg-red-900 text-white px-4 py-2 rounded uppercase hover:bg-red-950 w-full cursor-pointer"
+            className="bg-red-900 text-white text-sm font-semibold px-4 py-2.5 rounded uppercase hover:bg-red-950 w-full cursor-pointer"
           >
             Submit Prediction
           </button>

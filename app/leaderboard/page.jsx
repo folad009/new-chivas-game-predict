@@ -39,7 +39,7 @@ const MobileMenu = ({ session }) => (
           </p>
           <button
             onClick={() => signOut()}
-            className="w-full bg-red-900 text-white py-2 rounded-md shadow hover:bg-red-950 transition text-sm"
+            className="w-full bg-red-900 text-white py-2.5 rounded-md shadow hover:bg-red-950 transition text-sm font-medium"
           >
             Sign Out
           </button>
@@ -53,14 +53,14 @@ const MobileMenu = ({ session }) => (
 
 // Header component that handles both desktop and mobile views
 const Header = ({ session, isMenuOpen, toggleMenu }) => (
-  <header className="bg-red-900 shadow-sm p-5 border-b border-b-white">
+  <header className="bg-red-900 shadow-sm p-4 sm:p-5 border-b border-b-white">
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="flex h-16 items-center justify-between">
         <div className="flex items-center gap-5">
           <img
             src="/assets/img/chivas-regal-logo-white.png"
             alt="betway logo"
-            className="w-[180px]"
+            className="w-36 sm:w-[180px]"
           />
         </div>
         <MenuButton onClick={toggleMenu} />
@@ -73,14 +73,14 @@ const Header = ({ session, isMenuOpen, toggleMenu }) => (
               {session.user.role === "admin" && (
                 <a
                   href="/admin/award-points"
-                  className="bg-red-800 text-white px-4 py-2 rounded-md shadow hover:bg-red-950 hover:text-white transition text-sm"
+                  className="bg-red-800 text-white px-4 py-2.5 rounded-md shadow hover:bg-red-950 hover:text-white transition text-sm font-medium"
                 >
                   Award Points
                 </a>
               )}
               <button
                 onClick={() => signOut()}
-                className="bg-red-800 text-white px-4 py-2 rounded-md shadow hover:bg-red-950 transition text-sm"
+                className="bg-red-800 text-white px-4 py-2.5 rounded-md shadow hover:bg-red-950 transition text-sm font-medium"
               >
                 Sign Out
               </button>
@@ -88,7 +88,7 @@ const Header = ({ session, isMenuOpen, toggleMenu }) => (
           ) : (
             <a
               href="/auth"
-              className="bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-green-950 transition text-sm"
+              className="bg-green-900 text-white px-4 py-2.5 rounded-md shadow hover:bg-green-950 transition text-sm font-medium"
             >
               Sign In
             </a>
@@ -185,14 +185,14 @@ export default function Leaderboard() {
         isMenuOpen={isMenuOpen}
         toggleMenu={toggleMenu}
       />
-      <main className="flex flex-col items-center justify-center min-h-screen px-4 py-10 text-center bg-red-900">
-        <h2 className="text-4xl font-bold mb-6 text-white">🏆 Leaderboard</h2>
+      <main className="flex flex-col items-center justify-center min-h-screen px-4 py-8 sm:py-10 text-center bg-red-900">
+        <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-white">🏆 Leaderboard</h2>
 
         {/* Toggle between Half-Time and Full-Time */}
-        <div className="mb-6">
+        <div className="mb-6 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-md sm:max-w-none justify-center">
           <button
             onClick={() => setView("half-time")}
-            className={`px-4 py-2 rounded-md cursor-pointer ${
+            className={`px-4 py-2.5 rounded-md cursor-pointer w-full sm:w-auto text-sm font-medium ${
               view === "half-time"
                 ? "bg-gray-900 text-white"
                 : "bg-gray-200 text-red-900"
@@ -202,7 +202,7 @@ export default function Leaderboard() {
           </button>
           <button
             onClick={() => setView("full-time")}
-            className={`ml-4 px-4 py-2 rounded-md cursor-pointer ${
+            className={`px-4 py-2.5 rounded-md cursor-pointer w-full sm:w-auto text-sm font-medium ${
               view === "full-time"
                 ? "bg-red-950 text-white"
                 : "bg-gray-200 text-red-900"
@@ -219,15 +219,15 @@ export default function Leaderboard() {
             placeholder="Search by name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-2 border border-white text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-green-900 focus:border-green-900"
+            className="w-full px-4 py-2.5 text-sm border border-white text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-green-900 focus:border-green-900"
           />
         </div>
 
         {/* Leaderboard table */}
-        <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6 overflow-x-auto">
+        <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-3 sm:p-6 overflow-x-auto">
           {currentData.length > 0 ? (
             <>
-              <table className="w-full text-left border-collapse">
+              <table className="w-full min-w-[640px] text-left border-collapse text-sm">
                 <thead>
                   <tr className="bg-gray-200">
                     <th className="p-2 border">#</th>
@@ -305,7 +305,7 @@ export default function Leaderboard() {
                 alert("Leaderboard has been cleared successfully!");
               }
             }}
-            className="mt-4 bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800 transition duration-300"
+            className="mt-4 w-full sm:w-auto bg-red-700 text-white text-sm font-medium px-4 py-2.5 rounded hover:bg-red-800 transition duration-300"
           >
             Clear Predictions for New Game
           </button>
@@ -313,7 +313,7 @@ export default function Leaderboard() {
 
         <button
           onClick={() => router.push("/")}
-          className="mt-6 bg-gray-900 text-white px-4 py-2 rounded hover:bg-green-950 transition duration-300 cursor-pointer"
+          className="mt-6 w-full sm:w-auto bg-gray-900 text-white text-sm font-medium px-4 py-2.5 rounded hover:bg-green-950 transition duration-300 cursor-pointer"
         >
           Back to Home
         </button>

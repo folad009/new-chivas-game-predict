@@ -118,18 +118,18 @@ const ArchivePage = () => {
 
   const uniqueTypes = [...new Set(games.map((g) => g.gameType))];
 
-  if (loading) return <p>Loading archived games...</p>;
+  if (loading) return <p className="p-4 text-sm">Loading archived games...</p>;
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Archived Games</h1>
+    <div className="p-3 sm:p-6">
+      <h1 className="text-xl sm:text-2xl font-bold mb-4">Archived Games</h1>
 
-      <div className="mb-6 flex flex-wrap items-center gap-3">
+      <div className="mb-6 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3">
         <button
           type="button"
           onClick={handleMovePastGamesToArchive}
           disabled={archiving}
-          className="bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white px-4 py-2 rounded"
+          className="w-full sm:w-auto bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white px-4 py-2 rounded"
         >
           {archiving ? "Archiving…" : "Move past games to archive"}
         </button>
@@ -144,11 +144,11 @@ const ArchivePage = () => {
       )}
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-6">
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
-          className="border px-3 py-2 rounded"
+          className="border px-3 py-2 rounded w-full"
         >
           <option value="All">All Types</option>
           {uniqueTypes.map((type) => (
@@ -160,7 +160,7 @@ const ArchivePage = () => {
           type="date"
           value={dateFilter}
           onChange={(e) => setDateFilter(e.target.value)}
-          className="border px-3 py-2 rounded"
+          className="border px-3 py-2 rounded w-full"
         />
 
         <input
@@ -168,19 +168,19 @@ const ArchivePage = () => {
           placeholder="Search by user or team..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="border px-3 py-2 rounded"
+          className="border px-3 py-2 rounded w-full"
         />
 
         <button
           onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
+          className="bg-blue-600 text-white px-4 py-2 rounded w-full"
         >
           Sort: {sortOrder === "asc" ? "Oldest First" : "Newest First"}
         </button>
 
         <button
           onClick={handleExport}
-          className="bg-green-600 text-white px-4 py-2 rounded"
+          className="bg-green-600 text-white px-4 py-2 rounded w-full"
         >
           Export to CSV
         </button>
@@ -190,7 +190,7 @@ const ArchivePage = () => {
 
       {filteredGames.length > 0 && (
         <div className="overflow-x-auto shadow rounded-lg border border-gray-200">
-          <table className="min-w-full bg-white text-sm">
+          <table className="min-w-[860px] w-full bg-white text-xs sm:text-sm">
             <thead className="bg-gray-100 sticky top-0">
               <tr>
                 <th className="px-4 py-2 border">Date</th>
@@ -227,11 +227,11 @@ const ArchivePage = () => {
       )}
 
       {/* Pagination */}
-      <div className="flex justify-between items-center mt-4">
+      <div className="flex flex-col sm:flex-row justify-between items-center mt-4 gap-3">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
-          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+          className="w-full sm:w-auto px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
         >
           Previous
         </button>
@@ -250,7 +250,7 @@ const ArchivePage = () => {
           disabled={
             currentPage === Math.ceil(filteredGames.length / itemsPerPage)
           }
-          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+          className="w-full sm:w-auto px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
         >
           Next
         </button>

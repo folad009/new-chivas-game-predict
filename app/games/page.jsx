@@ -31,14 +31,14 @@ export default function Games() {
 
   return (
     <>
-      <header className="bg-red-950 shadow-sm p-4 border-b border-b-white">
+      <header className="bg-red-950 shadow-sm p-3 sm:p-4 border-b border-b-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center justify-between">
               <img
                 src="/assets/img/chivas-regal-logo-white.png"
                 alt="betway logo"
-                className="w-[180px]"
+                className="w-36 sm:w-[180px]"
               />
             </div>
 
@@ -64,7 +64,7 @@ export default function Games() {
             </button>
 
             <nav
-              className={`absolute md:static top-16 left-0 w-full md:w-auto md:bg-transparent 
+              className={`absolute md:static top-16 left-0 z-20 w-full md:w-auto md:bg-transparent bg-red-950 
         ${
           isMenuOpen ? "block" : "hidden"
         } md:flex flex-col md:flex-row items-start md:items-center gap-4 p-4 md:p-0 text-white`}
@@ -77,22 +77,22 @@ export default function Games() {
                   </p>
                   {session.user.role === "admin" && (
                     <>
-                      <div className="flex items-center justify-between mb-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 mb-4">
                         <a
                           href="/admin/award-points"
-                          className="bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black hover:text-white transition text-sm"
+                        className="w-full sm:w-auto bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black hover:text-white transition text-sm"
                         >
                           Award Points
                         </a>
                         <a
                           href="/admin/add-games"
-                          className="bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black hover:text-white transition text-sm"
+                          className="w-full sm:w-auto bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black hover:text-white transition text-sm"
                         >
                           Add Game
                         </a>
                         <a
                           href="/admin/archive"
-                          className="bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black hover:text-white transition text-sm"
+                          className="w-full sm:w-auto bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black hover:text-white transition text-sm"
                         >
                           Archive Games
                         </a>
@@ -101,13 +101,13 @@ export default function Games() {
                   )}
                   <button
                     onClick={onSignOut}
-                    className="bg-red-900 px-4 py-2 rounded-md shadow hover:bg-gray-900 transition text-sm"
+                    className="w-full sm:w-auto bg-red-900 px-4 py-2 rounded-md shadow hover:bg-gray-900 transition text-sm"
                   >
                     Sign Out
                   </button>
                 </>
               ) : (
-                <button className="bg-black text-white px-4 py-2 rounded-md shadow hover:bg-green-950 transition text-sm">
+                <button className="w-full sm:w-auto bg-black text-white px-4 py-2 rounded-md shadow hover:bg-green-950 transition text-sm">
                   <a href="/auth">Sign in</a>
                 </button>
               )}
@@ -116,8 +116,8 @@ export default function Games() {
         </div>
       </header>
 
-      <main className="flex items-center justify-center min-h-screen px-4 text-center bg-red-950">
-        <div className="w-full max-w-lg bg-red-900 p-6 rounded-lg shadow-lg text-center h-auto  py-5 mx-5 my-10">
+      <main className="flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 py-6 text-center bg-red-950 gap-6">
+        <div className="w-full max-w-lg bg-red-900 p-4 sm:p-6 rounded-lg shadow-lg text-center h-auto py-5 mx-0 my-4">
           <h2 className="text-xl sm:text-2xl text-white font-bold mb-6">
             ⚽ Upcoming Games
           </h2>
@@ -141,15 +141,15 @@ export default function Games() {
                           <img
                             src={game.team1Logo}
                             alt={game.team1}
-                            className="w-20 h-20"
+                            className="w-14 h-14 sm:w-20 sm:h-20"
                           />
-                          <span className="text-sm sm:text-base">
+                          <span className="text-xs sm:text-base">
                             {game.team1} vs {game.team2}
                           </span>
                           <img
                             src={game.team2Logo}
                             alt={game.team2}
-                            className="w-20 h-20"
+                            className="w-14 h-14 sm:w-20 sm:h-20"
                           />
                         </div>
                         <p className="text-black text-xs sm:text-sm">
@@ -184,7 +184,7 @@ export default function Games() {
             </div>
           )}
         </div>
-        <div className="w-full lg:w-[500px] flex justify-center">
+        <div className="w-full max-w-xs sm:max-w-sm lg:w-[500px] flex justify-center">
           <img
             
             src="/assets/img/betway-img-banner-1.png"

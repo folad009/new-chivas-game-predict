@@ -61,17 +61,17 @@ export default function Auth() {
   
 
   return (
-    <div className="flex items-center justify-center min-h-screen px-4 bg-red-950">
-      <div className="w-full max-w-lg bg-red-800 p-6 rounded-lg shadow-lg text-center h-[550px] py-5 mx-5">
-        <div className="flex items-center mb-10 mx-auto justify-center gap-5 mt-10">
+    <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 py-6 bg-red-950 gap-6">
+      <div className="w-full max-w-lg bg-red-800 p-4 sm:p-6 rounded-lg shadow-lg text-center min-h-[520px] py-5 mx-0">
+        <div className="flex items-center mb-8 mx-auto justify-center gap-5 mt-6">
         <img
-          className="w-70"
+          className="w-48 sm:w-64"
           src="/assets/img/chivas-regal-logo-white.png"
           alt="Chivas Regal Logo"
         />
         </div>
         
-        <h1 className="text-[15px] font-bold mb-6 text-white font-serif">
+        <h1 className="text-sm sm:text-[15px] font-bold mb-6 text-white font-serif">
           {isAdminLogin ? "Admin Login" : "Login"} to Game Predict
         </h1>
 
@@ -128,7 +128,7 @@ export default function Auth() {
               {isAdminLogin ? "Admin Login" : "Login"}
             </button>
 
-            <p className="mt-4 text-white">
+            <p className="mt-4 text-white text-sm sm:text-base">
               {isAdminLogin ? "Are you a user?" : "Are you an admin?"}{" "}
               <span
                 onClick={() => {
@@ -150,9 +150,9 @@ export default function Auth() {
           </form>
         )}
       </div>
-      <div>
+      <div className="w-full max-w-xs sm:max-w-sm lg:max-w-md">
         <img
-          className="w-[500px] mx-auto"
+          className="w-full mx-auto"
           src="/assets/img/betway-img-banner-1.png"
           alt="Chivas Logo"
         />

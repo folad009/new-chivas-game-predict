@@ -135,28 +135,28 @@ export default function AdminAwardPoints() {
     }
   };
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <p className="p-4 text-sm">Loading...</p>;
   if (!isAdmin) return null;
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold mb-6">Award Points</h2>
+    <div className="p-3 sm:p-4">
+      <h2 className="text-xl sm:text-2xl font-bold mb-6">Award Points</h2>
 
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
         <button
           onClick={awardAllGames}
           disabled={isAwarding}
-          className="bg-red-900 hover:bg-red-950 text-white px-6 py-2 rounded"
+          className="w-full sm:w-auto bg-red-900 hover:bg-red-950 text-white text-sm font-medium px-6 py-2.5 rounded"
         >
           {isAwarding ? "Awarding..." : "Award Points for All Games"}
         </button>
 
         <div>
-          <label className="mr-2 font-semibold">Awarding Phase:</label>
+          <label className="mr-2 text-sm font-semibold">Awarding Phase:</label>
           <select
             value={phase}
             onChange={(e) => setPhase(e.target.value)}
-            className="border rounded p-2"
+            className="border rounded p-2.5 text-sm"
           >
             <option value="half-time">Half-Time</option>
             <option value="full-time">Full-Time</option>
@@ -164,7 +164,8 @@ export default function AdminAwardPoints() {
         </div>
       </div>
 
-      <table className="min-w-full table-auto border">
+      <div className="w-full overflow-x-auto">
+      <table className="min-w-[900px] w-full table-auto border text-sm">
         <thead className="bg-gray-100">
           <tr>
             {[
@@ -229,7 +230,7 @@ export default function AdminAwardPoints() {
                   <button
                     onClick={() => awardPoints(gameId)}
                     disabled={isAwarding}
-                    className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded"
+                    className="bg-green-600 hover:bg-green-700 text-white text-xs sm:text-sm font-medium px-3 py-1.5 rounded"
                   >
                     Award
                   </button>
@@ -239,6 +240,7 @@ export default function AdminAwardPoints() {
           })}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

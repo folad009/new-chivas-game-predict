@@ -78,11 +78,11 @@ const AdminGameInput = () => {
   if (!isAdmin) return null; // Prevents rendering if not admin
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h2 className="text-2xl font-bold mb-6">Add a New Game</h2>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-3 py-6 sm:px-4">
+      <h2 className="text-xl sm:text-2xl font-bold mb-5 sm:mb-6 text-center">Add a New Game</h2>
       <form
         onSubmit={handleSubmit}
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md"
+        className="bg-white shadow-md rounded px-4 sm:px-8 pt-5 sm:pt-6 pb-6 sm:pb-8 mb-4 w-full max-w-md"
       >
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">Team 1</label>
@@ -144,13 +144,13 @@ const AdminGameInput = () => {
         </div>
         <button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded"
           disabled={addGameMutation.isLoading}
         >
           {addGameMutation.isLoading ? "Adding..." : "Add Game"}
         </button>
       </form>
-      {message && <p className="text-green-500">{message}</p>}
+      {message && <p className="text-green-600 text-sm text-center px-2">{message}</p>}
     </div>
   );
 };
