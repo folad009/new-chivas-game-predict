@@ -35,6 +35,8 @@ model Prediction {
   predictionType  String? 
   predictedTeam   String?  
   losingTeam      String?  
+  predictedTeam1Score Int   @default(0)
+  predictedTeam2Score Int   @default(0)
   createdAt       DateTime  @default(now())
   fullTimePoints  Int?       @default(0)
   halfTimePoints  Int?       @default(0)
@@ -61,6 +63,8 @@ model ArchivedPrediction {
   predictionType  String?
   predictedTeam   String?
   losingTeam      String?
+  predictedTeam1Score Int    @default(0)
+  predictedTeam2Score Int    @default(0)
   createdAt       DateTime   @default(now())
   fullTimePoints  Int        @default(0)
   halfTimePoints  Int        @default(0)

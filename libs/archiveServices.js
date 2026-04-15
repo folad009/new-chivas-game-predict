@@ -34,6 +34,8 @@ export async function movePastGamesToArchive() {
           predictionType: p.predictionType,
           predictedTeam: p.predictedTeam,
           losingTeam: p.losingTeam,
+          predictedTeam1Score: p.predictedTeam1Score ?? 0,
+          predictedTeam2Score: p.predictedTeam2Score ?? 0,
           fullTimePoints: p.fullTimePoints ?? 0,
           halfTimePoints: p.halfTimePoints ?? 0,
           createdAt: p.createdAt,

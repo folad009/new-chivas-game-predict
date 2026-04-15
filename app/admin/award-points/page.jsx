@@ -61,8 +61,13 @@ export default function AdminAwardPoints() {
 
   const awardPoints = async (gameId) => {
     const result = gameResults[gameId];
-    if (!result?.actualWinningTeam) {
-      alert("Please select the winning team (or draw).");
+    if (
+      !Number.isInteger(result?.actualTeam1Score) ||
+      !Number.isInteger(result?.actualTeam2Score) ||
+      result.actualTeam1Score < 0 ||
+      result.actualTeam2Score < 0
+    ) {
+      alert("Please enter both team scores.");
       return;
     }
 
@@ -74,7 +79,8 @@ export default function AdminAwardPoints() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           gameId,
-          actualWinningTeam: result.actualWinningTeam,
+          actualTeam1Score: result.actualTeam1Score,
+          actualTeam2Score: result.actualTeam2Score,
           period: phase,
         }),
       });
@@ -100,7 +106,12 @@ export default function AdminAwardPoints() {
 
     for (const gameId of uniqueGameIds) {
       const result = gameResults[gameId];
-      if (!result?.actualWinningTeam) {
+      if (
+        !Number.isInteger(result?.actualTeam1Score) ||
+        !Number.isInteger(result?.actualTeam2Score) ||
+        result.actualTeam1Score < 0 ||
+        result.actualTeam2Score < 0
+      ) {
         alert(`Missing results for game ID: ${gameId}`);
         return;
       }
@@ -116,7 +127,8 @@ export default function AdminAwardPoints() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               gameId,
-              actualWinningTeam: gameResults[gameId].actualWinningTeam,
+              actualTeam1Score: gameResults[gameId].actualTeam1Score,
+              actualTeam2Score: gameResults[gameId].actualTeam2Score,
               period: phase,
             }),
           })
@@ -170,7 +182,8 @@ export default function AdminAwardPoints() {
               "User",
               "Game",
               "Predicted Team",
-              "Actual Winning Team",
+              "Predicted Score",
+              "Actual Score",
               "Half-Time Points",
               "Full-Time Points",
               "Actions",
@@ -184,7 +197,17 @@ export default function AdminAwardPoints() {
 
         <tbody>
           {predictions.map((prediction) => {
-            const { id, user, game, predictedTeam, halfTimePoints, fullTimePoints, gameId } = prediction;
+            const {
+              id,
+              user,
+              game,
+              predictedTeam,
+              predictedTeam1Score,
+              predictedTeam2Score,
+              halfTimePoints,
+              fullTimePoints,
+              gameId,
+            } = prediction;
             const actualResult = gameResults[gameId] || {};
 
             return (
@@ -192,18 +215,43 @@ export default function AdminAwardPoints() {
                 <td className="border px-2 py-1">{user?.name || "Unknown"}</td>
                 <td className="border px-2 py-1">{`${game?.team1} vs ${game?.team2}`}</td>
                 <td className="border px-2 py-1">{predictedTeam || "Draw"}</td>
+                <td className="border px-2 py-1">{`${predictedTeam1Score} - ${predictedTeam2Score}`}</td>
 
                 <td className="border px-2 py-1">
-                  <select
-                    value={actualResult.actualWinningTeam || ""}
-                    onChange={(e) => handleResultChange(gameId, "actualWinningTeam", e.target.value)}
-                    className="border rounded p-1 w-full"
-                  >
-                    <option value="">Select Result</option>
-                    <option value={game?.team1}>{game?.team1}</option>
-                    <option value={game?.team2}>{game?.team2}</option>
-                    <option value="Draw">Draw</option>
-                  </select>
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      min="0"
+                      value={actualResult.actualTeam1Score ?? ""}
+                      onChange={(e) =>
+                        handleResultChange(
+                          gameId,
+                          "actualTeam1Score",
+                          e.target.value === ""
+                            ? undefined
+                            : parseInt(e.target.value, 10)
+                        )
+                      }
+                      placeholder={game?.team1}
+                      className="border rounded p-1 w-full"
+                    />
+                    <input
+                      type="number"
+                      min="0"
+                      value={actualResult.actualTeam2Score ?? ""}
+                      onChange={(e) =>
+                        handleResultChange(
+                          gameId,
+                          "actualTeam2Score",
+                          e.target.value === ""
+                            ? undefined
+                            : parseInt(e.target.value, 10)
+                        )
+                      }
+                      placeholder={game?.team2}
+                      className="border rounded p-1 w-full"
+                    />
+                  </div>
                 </td>
 
                 {/* Display Half-Time and Full-Time Points */}

@@ -11,20 +11,51 @@ export async function POST(req) {
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
-    const { gameId, actualWinningTeam, period } = await req.json();
+    const { gameId, actualTeam1Score, actualTeam2Score, period } = await req.json();
 
-    if (!gameId || !actualWinningTeam || !period) {
+    if (
+      !gameId ||
+      actualTeam1Score === undefined ||
+      actualTeam2Score === undefined ||
+      !period
+    ) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
     const game = await prisma.game.findUnique({ where: { id: gameId } });
     if (!game) return NextResponse.json({ error: "Game not found" }, { status: 404 });
 
+    const parsedActualTeam1Score = parseInt(actualTeam1Score, 10);
+    const parsedActualTeam2Score = parseInt(actualTeam2Score, 10);
+    if (
+      Number.isNaN(parsedActualTeam1Score) ||
+      Number.isNaN(parsedActualTeam2Score) ||
+      parsedActualTeam1Score < 0 ||
+      parsedActualTeam2Score < 0
+    ) {
+      return NextResponse.json({ error: "Invalid actual score values" }, { status: 400 });
+    }
+
+    const actualWinningTeam =
+      parsedActualTeam1Score === parsedActualTeam2Score
+        ? "draw"
+        : parsedActualTeam1Score > parsedActualTeam2Score
+          ? game.team1
+          : game.team2;
+
     const predictions = await prisma.prediction.findMany({ where: { gameId } });
     if (!predictions.length) return NextResponse.json({ message: "No predictions found." });
 
     const updatedResults = await Promise.all(
-      predictions.map((p) => updatePrediction(p, actualWinningTeam, period))
+      predictions.map((p) =>
+        updatePrediction(
+          p,
+          actualWinningTeam,
+          parsedActualTeam1Score,
+          parsedActualTeam2Score,
+          period
+        )
+      )
     );
 
     const affectedUserIds = [...new Set(updatedResults.filter(Boolean).map(p => p.userId))];
@@ -47,10 +78,18 @@ export async function POST(req) {
   }
 }
 
-async function updatePrediction(prediction, actualWinningTeam, period) {
+async function updatePrediction(
+  prediction,
+  actualWinningTeam,
+  actualTeam1Score,
+  actualTeam2Score,
+  period
+) {
   const { points, halfTimePoints } = calculatePoints(
     prediction,
     actualWinningTeam,
+    actualTeam1Score,
+    actualTeam2Score,
     period
   );
   if (points === 0 && halfTimePoints === 0) return null;
@@ -73,22 +112,33 @@ async function updatePrediction(prediction, actualWinningTeam, period) {
   };
 }
 
-function calculatePoints(prediction, actualWinningTeam, period) {
+function calculatePoints(
+  prediction,
+  actualWinningTeam,
+  actualTeam1Score,
+  actualTeam2Score,
+  period
+) {
     let points = 0;
    let halfTimePoints = 0;
   const normalizedActualWinner = actualWinningTeam.toLowerCase();
   const isDraw = normalizedActualWinner === "draw";
+  const exactScoreMatch =
+    prediction.predictedTeam1Score === actualTeam1Score &&
+    prediction.predictedTeam2Score === actualTeam2Score;
 
   if (period === "half-time") {
-    if (isDraw && prediction.predictionType === "draw") halfTimePoints += 50;
-    if (!isDraw && prediction.predictedTeam === actualWinningTeam) halfTimePoints += 50;
+    if (isDraw && prediction.predictionType === "draw") halfTimePoints += 20;
+    if (!isDraw && prediction.predictedTeam === actualWinningTeam) halfTimePoints += 20;
+    if (exactScoreMatch) halfTimePoints += 20;
   }
 
   if (period === "full-time") {
     const correctWinner = prediction.predictedTeam === actualWinningTeam;
     const correctDraw = prediction.predictionType === "draw" && isDraw;
 
-    if (correctWinner || correctDraw) points = 100;
+    if (correctWinner || correctDraw) points += 60;
+    if (exactScoreMatch) points += 60;
   }
 
   const totalpoints = points + halfTimePoints;

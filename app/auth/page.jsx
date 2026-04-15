@@ -16,12 +16,12 @@ export default function Auth() {
 
   useEffect(() => {
     if (session) {
-      router.push("/");
+      router.push("/games");
     }
   }, [session, router]);
 
   const handleSignOut = () => {
-    signOut();
+    signOut({ callbackUrl: "/" });
   };
 
   const handleFormSubmit = async (event) => {

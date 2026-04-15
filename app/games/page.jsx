@@ -12,7 +12,7 @@ export default function Games() {
   const { data: session } = useSession();
 
   const onSignOut = () => {
-    signOut();
+    signOut({ callbackUrl: "/" });
   };
 
   const {
@@ -107,9 +107,20 @@ export default function Games() {
                   </button>
                 </>
               ) : (
-                <button className="w-full sm:w-auto bg-black text-white px-4 py-2 rounded-md shadow hover:bg-green-950 transition text-sm">
-                  <a href="/auth">Sign in</a>
-                </button>
+                <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-2">
+                  <a
+                    href="/leaderboard"
+                    className="w-full sm:w-auto bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black transition text-sm text-center"
+                  >
+                    Leaderboard
+                  </a>
+                  <a
+                    href="/auth"
+                    className="w-full sm:w-auto bg-black text-white px-4 py-2 rounded-md shadow hover:bg-green-950 transition text-sm text-center"
+                  >
+                    Sign in
+                  </a>
+                </div>
               )}
             </nav>
           </div>

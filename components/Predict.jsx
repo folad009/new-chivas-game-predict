@@ -10,6 +10,8 @@ export default function Predict() {
   const [winningTeam, setWinningTeam] = useState("");
   const [losingTeam, setLosingTeam] = useState("");
   const [isDraw, setIsDraw] = useState(false);
+  const [team1Score, setTeam1Score] = useState("");
+  const [team2Score, setTeam2Score] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -27,8 +29,36 @@ export default function Predict() {
   }, []);
 
   const submitPrediction = async () => {
-    if (!selectedGame || (!isDraw && (!winningTeam || !losingTeam))) {
+    if (!selectedGame || team1Score === "" || team2Score === "") {
       setError("Please fill in all fields correctly before submitting.");
+      return;
+    }
+
+    const parsedTeam1Score = parseInt(team1Score, 10);
+    const parsedTeam2Score = parseInt(team2Score, 10);
+
+    if (
+      Number.isNaN(parsedTeam1Score) ||
+      Number.isNaN(parsedTeam2Score) ||
+      parsedTeam1Score < 0 ||
+      parsedTeam2Score < 0
+    ) {
+      setError("Scores must be valid numbers greater than or equal to 0.");
+      return;
+    }
+
+    if (isDraw && parsedTeam1Score !== parsedTeam2Score) {
+      setError("Draw prediction requires equal scores for both teams.");
+      return;
+    }
+
+    if (!isDraw && parsedTeam1Score === parsedTeam2Score) {
+      setError("Winning team prediction cannot have equal scores.");
+      return;
+    }
+
+    if (!isDraw && !winningTeam) {
+      setError("Please select the winning team.");
       return;
     }
 
@@ -39,16 +69,16 @@ export default function Predict() {
 
     setError(""); // Clear any previous errors
 
-    const predictionType = isDraw ? "draw" : "win"; // Default to "win" if not a draw
-
     const response = await fetch("/api/predictions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         gameId: selectedGame.id,
+        predictionType: isDraw ? "draw" : "win",
         winningTeam,
         losingTeam,
-        predictionType,
+        predictedTeam1Score: parsedTeam1Score,
+        predictedTeam2Score: parsedTeam2Score,
         userId: session.user.id,
       }),
     });
@@ -69,7 +99,9 @@ export default function Predict() {
     setSelectedGame(null);
     setWinningTeam("");
     setLosingTeam("");
-    setIsDraw(false); // Reset draw state
+    setIsDraw(false);
+    setTeam1Score("");
+    setTeam2Score("");
     setError("");
   };
 
@@ -113,16 +145,16 @@ export default function Predict() {
             {selectedGame.team1} vs {selectedGame.team2}
           </h3>
 
-          {/* Draw option */}
           <div className="mb-3 flex items-center">
             <input
               type="checkbox"
               id="draw"
               checked={isDraw}
               onChange={(e) => {
-                setIsDraw(e.target.checked);
-                setWinningTeam(""); // Clear winning team if it's a draw
-                setLosingTeam(""); // Clear losing team if it's a draw
+                const drawChecked = e.target.checked;
+                setIsDraw(drawChecked);
+                setWinningTeam("");
+                setLosingTeam("");
               }}
               className="mr-2"
             />
@@ -131,7 +163,6 @@ export default function Predict() {
             </label>
           </div>
 
-          {/* Winning Team and Losing Team Selection */}
           {!isDraw && (
             <>
               <label className="block mb-2 text-red-900">Winning Team</label>
@@ -140,14 +171,12 @@ export default function Predict() {
                 onChange={(e) => {
                   const selectedWinningTeam = e.target.value;
                   setWinningTeam(selectedWinningTeam);
-
-                  // Automatically set the losing team to the other team
                   if (selectedWinningTeam === selectedGame.team1) {
                     setLosingTeam(selectedGame.team2);
                   } else if (selectedWinningTeam === selectedGame.team2) {
                     setLosingTeam(selectedGame.team1);
                   } else {
-                    setLosingTeam(""); // Reset if no valid selection
+                    setLosingTeam("");
                   }
                 }}
                 className="border p-2.5 text-sm w-full mb-3 text-red-900"
@@ -159,27 +188,39 @@ export default function Predict() {
 
               {winningTeam && (
                 <>
-                  <label className="block mb-2 text-red-900">
-                    Losing Team
-                  </label>
+                  <label className="block mb-2 text-red-900">Losing Team</label>
                   <select
                     value={losingTeam}
                     onChange={(e) => setLosingTeam(e.target.value)}
-                    className="border p-2.5 text-sm w-full mb-3 text-green-900"
-                    disabled // Disable manual selection of losing team
+                    className="border p-2.5 text-sm w-full mb-3 text-red-900"
+                    disabled
                   >
                     <option value="">Select Team</option>
-                    <option value={selectedGame.team1}>
-                      {selectedGame.team1}
-                    </option>
-                    <option value={selectedGame.team2}>
-                      {selectedGame.team2}
-                    </option>
+                    <option value={selectedGame.team1}>{selectedGame.team1}</option>
+                    <option value={selectedGame.team2}>{selectedGame.team2}</option>
                   </select>
                 </>
               )}
             </>
           )}
+
+          <label className="block mb-2 text-red-900">{selectedGame.team1} Score</label>
+          <input
+            type="number"
+            min="0"
+            value={team1Score}
+            onChange={(e) => setTeam1Score(e.target.value)}
+            className="border p-2.5 text-sm w-full mb-3 text-red-900"
+          />
+
+          <label className="block mb-2 text-red-900">{selectedGame.team2} Score</label>
+          <input
+            type="number"
+            min="0"
+            value={team2Score}
+            onChange={(e) => setTeam2Score(e.target.value)}
+            className="border p-2.5 text-sm w-full mb-3 text-red-900"
+          />
           <button
             onClick={submitPrediction}
             className="bg-red-900 text-white text-sm font-semibold px-4 py-2.5 rounded uppercase hover:bg-red-950 w-full cursor-pointer"
