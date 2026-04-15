@@ -11,9 +11,9 @@ export async function POST(req) {
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
-    const { gameId, actualWinningTeam, actualGoalDifference, period } = await req.json();
+    const { gameId, actualWinningTeam, period } = await req.json();
 
-    if (!gameId || !actualWinningTeam || actualGoalDifference === undefined || !period) {
+    if (!gameId || !actualWinningTeam || !period) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
@@ -24,7 +24,7 @@ export async function POST(req) {
     if (!predictions.length) return NextResponse.json({ message: "No predictions found." });
 
     const updatedResults = await Promise.all(
-      predictions.map(p => updatePrediction(p, actualWinningTeam, actualGoalDifference, period))
+      predictions.map((p) => updatePrediction(p, actualWinningTeam, period))
     );
 
     const affectedUserIds = [...new Set(updatedResults.filter(Boolean).map(p => p.userId))];
@@ -47,8 +47,12 @@ export async function POST(req) {
   }
 }
 
-async function updatePrediction(prediction, actualWinningTeam, actualGoalDifference, period) {
-  const { points, halfTimePoints } = calculatePoints(prediction, actualWinningTeam, actualGoalDifference, period);
+async function updatePrediction(prediction, actualWinningTeam, period) {
+  const { points, halfTimePoints } = calculatePoints(
+    prediction,
+    actualWinningTeam,
+    period
+  );
   if (points === 0 && halfTimePoints === 0) return null;
 
   const updateData = {};
@@ -69,27 +73,22 @@ async function updatePrediction(prediction, actualWinningTeam, actualGoalDiffere
   };
 }
 
-function calculatePoints(prediction, actualWinningTeam, actualGoalDifference, period) {
+function calculatePoints(prediction, actualWinningTeam, period) {
     let points = 0;
    let halfTimePoints = 0;
+  const normalizedActualWinner = actualWinningTeam.toLowerCase();
+  const isDraw = normalizedActualWinner === "draw";
 
   if (period === "half-time") {
-    if (prediction.predictedTeam === actualWinningTeam) halfTimePoints += 50;
-    if (prediction.goalDifference === actualGoalDifference) halfTimePoints += 40;
+    if (isDraw && prediction.predictionType === "draw") halfTimePoints += 50;
+    if (!isDraw && prediction.predictedTeam === actualWinningTeam) halfTimePoints += 50;
   }
 
   if (period === "full-time") {
     const correctWinner = prediction.predictedTeam === actualWinningTeam;
-    const correctDiff = prediction.goalDifference === actualGoalDifference;
-    const isDraw = prediction.predictionType === "draw" && actualWinningTeam === "draw";
+    const correctDraw = prediction.predictionType === "draw" && isDraw;
 
-    if (correctWinner && correctDiff) points = 150;
-    else if (correctWinner && !correctDiff) points = 75;
-    else if (isDraw && actualGoalDifference === 0) points = 100;
-    else if (correctWinner || isDraw) points = 50;
-    else if (!correctWinner && !correctDiff) points = 0;
-    else if (correctDiff) points = 25;
-    else points = 0
+    if (correctWinner || correctDraw) points = 100;
   }
 
   const totalpoints = points + halfTimePoints;

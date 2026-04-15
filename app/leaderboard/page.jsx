@@ -52,7 +52,7 @@ const MobileMenu = ({ session }) => (
 );
 
 // Header component that handles both desktop and mobile views
-const Header = ({ session, isMenuOpen, toggleMenu }) => (
+const Header = ({ session, isMenuOpen, toggleMenu, isAdmin }) => (
   <header className="bg-red-900 shadow-sm p-4 sm:p-5 border-b border-b-white">
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="flex h-16 items-center justify-between">
@@ -70,7 +70,7 @@ const Header = ({ session, isMenuOpen, toggleMenu }) => (
               <p className="text-sm font-medium">
                 Welcome, <span className="font-black">{session.user.name}</span>
               </p>
-              {session.user.role === "admin" && (
+              {isAdmin && (
                 <a
                   href="/admin/award-points"
                   className="bg-red-800 text-white px-4 py-2.5 rounded-md shadow hover:bg-red-950 hover:text-white transition text-sm font-medium"
@@ -110,6 +110,7 @@ export default function Leaderboard() {
   const itemsPerPage = 10; // Show 10 rows per page
   const { data: session } = useSession();
   const router = useRouter();
+  const isAdmin = session?.user?.role?.toLowerCase() === "admin";
 
   // Fetch leaderboard data
   useEffect(() => {
@@ -184,6 +185,7 @@ export default function Leaderboard() {
         session={session}
         isMenuOpen={isMenuOpen}
         toggleMenu={toggleMenu}
+        isAdmin={isAdmin}
       />
       <main className="flex flex-col items-center justify-center min-h-screen px-4 py-8 sm:py-10 text-center bg-red-900">
         <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-white">🏆 Leaderboard</h2>
@@ -294,7 +296,7 @@ export default function Leaderboard() {
         </div>
 
         {/* Clear Leaderboard Button */}
-        {session?.user?.role === "admin" && (
+        {isAdmin && (
           <button
             onClick={() => {
               const confirmClear = window.confirm(

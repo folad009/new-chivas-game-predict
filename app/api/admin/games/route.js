@@ -1,4 +1,4 @@
-import { addAdminGames, getAdminGames } from "@/libs/adminGames";
+import { addAdminGames, getAdminGames, removeAdminGame } from "@/libs/adminGames";
 import { authOptions } from "../../auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server"; // ✅ Import NextResponse
@@ -49,6 +49,32 @@ export async function POST(req) {
         status: 400,
         headers: { "Content-Type": "application/json" },
       }
+    );
+  }
+}
+
+export async function DELETE(req) {
+  const session = await getServerSession(authOptions);
+
+  if (!session || session.user.role !== "admin") {
+    return NextResponse.json({ error: "Access denied" }, { status: 403 });
+  }
+
+  try {
+    const { searchParams } = new URL(req.url);
+    const gameId = searchParams.get("id");
+
+    if (!gameId) {
+      return NextResponse.json({ error: "Game id is required" }, { status: 400 });
+    }
+
+    await removeAdminGame(gameId);
+
+    return NextResponse.json({ message: "Game removed successfully" }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { error: error.message || "Failed to remove game" },
+      { status: 400 }
     );
   }
 }

@@ -28,3 +28,13 @@ export async function addAdminGames(game) {
 export async function clearAdminGames() {
     return await prisma.game.deleteMany();
 }
+
+export async function removeAdminGame(id) {
+    if (!id) {
+        throw new Error("Game id is required.");
+    }
+
+    return await prisma.game.delete({
+        where: { id },
+    });
+}

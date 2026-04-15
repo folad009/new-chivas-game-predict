@@ -8,9 +8,9 @@ export async function POST(req) {
     const body = await req.json();
     console.log("Received body:", body);
 
-    const { gameId, predictionType, winningTeam, losingTeam, goalDifference, userId } = body;
+    const { gameId, predictionType, winningTeam, losingTeam, userId } = body;
 
-    if (!gameId || !predictionType || goalDifference === undefined || !userId) {
+    if (!gameId || !predictionType || !userId) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
@@ -54,7 +54,6 @@ export async function POST(req) {
         predictionType,
         predictedTeam, // Store the predicted winning or losing team
         losingTeam: predictedLosingTeam, // Store the predicted losing team (for "lose" type predictions)
-        goalDifference: parseInt(goalDifference, 10),
         userId,
       },
     });

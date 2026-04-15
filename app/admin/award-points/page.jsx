@@ -61,8 +61,8 @@ export default function AdminAwardPoints() {
 
   const awardPoints = async (gameId) => {
     const result = gameResults[gameId];
-    if (!result?.actualWinningTeam || result.actualGoalDifference === undefined) {
-      alert("Please fill in both winning team and goal difference.");
+    if (!result?.actualWinningTeam) {
+      alert("Please select the winning team (or draw).");
       return;
     }
 
@@ -75,7 +75,6 @@ export default function AdminAwardPoints() {
         body: JSON.stringify({
           gameId,
           actualWinningTeam: result.actualWinningTeam,
-          actualGoalDifference: result.actualGoalDifference,
           period: phase,
         }),
       });
@@ -101,7 +100,7 @@ export default function AdminAwardPoints() {
 
     for (const gameId of uniqueGameIds) {
       const result = gameResults[gameId];
-      if (!result?.actualWinningTeam || result.actualGoalDifference === undefined) {
+      if (!result?.actualWinningTeam) {
         alert(`Missing results for game ID: ${gameId}`);
         return;
       }
@@ -118,7 +117,6 @@ export default function AdminAwardPoints() {
             body: JSON.stringify({
               gameId,
               actualWinningTeam: gameResults[gameId].actualWinningTeam,
-              actualGoalDifference: gameResults[gameId].actualGoalDifference,
               period: phase,
             }),
           })
@@ -172,9 +170,7 @@ export default function AdminAwardPoints() {
               "User",
               "Game",
               "Predicted Team",
-              "Predicted Score",
               "Actual Winning Team",
-              "Actual Goal Diff",
               "Half-Time Points",
               "Full-Time Points",
               "Actions",
@@ -188,7 +184,7 @@ export default function AdminAwardPoints() {
 
         <tbody>
           {predictions.map((prediction) => {
-            const { id, user, game, predictedTeam, goalDifference, points, halfTimePoints, fullTimePoints, gameId } = prediction;
+            const { id, user, game, predictedTeam, halfTimePoints, fullTimePoints, gameId } = prediction;
             const actualResult = gameResults[gameId] || {};
 
             return (
@@ -196,7 +192,6 @@ export default function AdminAwardPoints() {
                 <td className="border px-2 py-1">{user?.name || "Unknown"}</td>
                 <td className="border px-2 py-1">{`${game?.team1} vs ${game?.team2}`}</td>
                 <td className="border px-2 py-1">{predictedTeam || "Draw"}</td>
-                <td className="border px-2 py-1">{goalDifference}</td>
 
                 <td className="border px-2 py-1">
                   <select
@@ -209,17 +204,6 @@ export default function AdminAwardPoints() {
                     <option value={game?.team2}>{game?.team2}</option>
                     <option value="Draw">Draw</option>
                   </select>
-                </td>
-
-                <td className="border px-2 py-1">
-                  <input
-                    type="number"
-                    value={actualResult.actualGoalDifference ?? ""}
-                    onChange={(e) =>
-                      handleResultChange(gameId, "actualGoalDifference", parseInt(e.target.value, 10))
-                    }
-                    className="border rounded p-1 w-full"
-                  />
                 </td>
 
                 {/* Display Half-Time and Full-Time Points */}

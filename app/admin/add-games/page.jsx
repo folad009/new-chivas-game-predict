@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import RemoveGames from "@/components/RemoveGames";
 
 const AdminGameInput = () => {
   const [team1, setTeam1] = useState("");
@@ -79,7 +80,7 @@ const AdminGameInput = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-3 py-6 sm:px-4">
-      <h2 className="text-xl sm:text-2xl font-bold mb-5 sm:mb-6 text-center">Add a New Game</h2>
+      <h2 className="text-xl sm:text-2xl font-bold mb-5 sm:mb-6 text-center">Manage Games</h2>
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded px-4 sm:px-8 pt-5 sm:pt-6 pb-6 sm:pb-8 mb-4 w-full max-w-md"
@@ -150,6 +151,7 @@ const AdminGameInput = () => {
           {addGameMutation.isLoading ? "Adding..." : "Add Game"}
         </button>
       </form>
+      <RemoveGames />
       {message && <p className="text-green-600 text-sm text-center px-2">{message}</p>}
     </div>
   );

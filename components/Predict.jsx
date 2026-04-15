@@ -9,7 +9,6 @@ export default function Predict() {
   const [selectedGame, setSelectedGame] = useState(null);
   const [winningTeam, setWinningTeam] = useState("");
   const [losingTeam, setLosingTeam] = useState("");
-  const [goalDifference, setGoalDifference] = useState("");
   const [isDraw, setIsDraw] = useState(false);
   const [error, setError] = useState("");
 
@@ -28,12 +27,7 @@ export default function Predict() {
   }, []);
 
   const submitPrediction = async () => {
-    // If draw, goalDifference should be set to zero automatically
-    if (
-      !selectedGame ||
-      (isDraw && goalDifference !== "0") ||
-      (!isDraw && (!winningTeam || !losingTeam || goalDifference === ""))
-    ) {
+    if (!selectedGame || (!isDraw && (!winningTeam || !losingTeam))) {
       setError("Please fill in all fields correctly before submitting.");
       return;
     }
@@ -54,7 +48,6 @@ export default function Predict() {
         gameId: selectedGame.id,
         winningTeam,
         losingTeam,
-        goalDifference: isDraw ? 0 : parseInt(goalDifference, 10), // Automatically set goal difference to 0 for draws
         predictionType,
         userId: session.user.id,
       }),
@@ -76,7 +69,6 @@ export default function Predict() {
     setSelectedGame(null);
     setWinningTeam("");
     setLosingTeam("");
-    setGoalDifference("");
     setIsDraw(false); // Reset draw state
     setError("");
   };
@@ -131,7 +123,6 @@ export default function Predict() {
                 setIsDraw(e.target.checked);
                 setWinningTeam(""); // Clear winning team if it's a draw
                 setLosingTeam(""); // Clear losing team if it's a draw
-                setGoalDifference("0"); // Set goal difference to 0 for draw
               }}
               className="mr-2"
             />
@@ -189,18 +180,6 @@ export default function Predict() {
               )}
             </>
           )}
-
-          {/* Goal Difference */}
-          <label className="block mb-2 text-red-900">Goal Difference</label>
-          <input
-            type="number"
-            value={goalDifference}
-            onChange={(e) => setGoalDifference(e.target.value)}
-            className="border p-2.5 text-sm w-full mb-3 text-red-900"
-            min="0"
-            disabled={isDraw} // Disable input if it's a draw
-          />
-
           <button
             onClick={submitPrediction}
             className="bg-red-900 text-white text-sm font-semibold px-4 py-2.5 rounded uppercase hover:bg-red-950 w-full cursor-pointer"
