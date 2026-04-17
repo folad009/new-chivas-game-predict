@@ -101,7 +101,7 @@ export default function Games() {
                   )}
                    <a
                     href="/leaderboard"
-                    className="w-full sm:w-auto bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black transition text-sm text-center"
+                    className="w-full sm:mb-4 bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black transition text-sm text-center"
                   >
                     Leaderboard
                   </a>
