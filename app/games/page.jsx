@@ -215,9 +215,9 @@ export default function Games() {
         </div>
         <div className="w-full max-w-xs sm:max-w-sm lg:w-[500px] flex justify-center">
           <img
-            
+            className="w-full max-h-[min(70vh,520px)] object-contain rounded-lg shadow-lg"
             src="/assets/img/betway-img-banner-1.png"
-            alt="Chivas Logo"
+            alt="Chivas Regal Watch Party promotional poster with Arsenal FC branding"
           />
         </div>
       </main>
