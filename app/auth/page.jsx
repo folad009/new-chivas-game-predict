@@ -21,7 +21,7 @@ export default function Auth() {
   }, [session, router]);
 
   const handleSignOut = () => {
-    signOut({ callbackUrl: "/" });
+    signOut({ redirect: false }).then(() => router.push("/"));
   };
 
   const handleFormSubmit = async (event) => {

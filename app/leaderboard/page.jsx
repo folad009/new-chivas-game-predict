@@ -38,7 +38,11 @@ const MobileMenu = ({ session }) => (
             Welcome, {session.user.name}
           </p>
           <button
-            onClick={() => signOut({ callbackUrl: "/" })}
+            onClick={() =>
+              signOut({ redirect: false }).then(() => {
+                window.location.href = "/";
+              })
+            }
             className="w-full bg-red-900 text-white py-2.5 rounded-md shadow hover:bg-red-950 transition text-sm font-medium"
           >
             Sign Out
@@ -79,7 +83,11 @@ const Header = ({ session, isMenuOpen, toggleMenu, isAdmin }) => (
                 </a>
               )}
               <button
-                onClick={() => signOut({ callbackUrl: "/" })}
+                onClick={() =>
+                  signOut({ redirect: false }).then(() => {
+                    window.location.href = "/";
+                  })
+                }
                 className="bg-red-800 text-white px-4 py-2.5 rounded-md shadow hover:bg-red-950 transition text-sm font-medium"
               >
                 Sign Out

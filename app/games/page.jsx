@@ -12,8 +12,10 @@ export default function Games() {
   const { data: session } = useSession();
 
   const onSignOut = () => {
-    signOut({ callbackUrl: "/" });
+    signOut({ redirect: false }).then(() => router.push("/"));
   };
+
+  const closeMenu = () => setIsMenuOpen(false);
 
   const {
     data: games,
@@ -31,7 +33,7 @@ export default function Games() {
 
   return (
     <>
-      <header className="bg-red-950 shadow-sm p-3 sm:p-4 border-b border-b-white">
+      <header className="bg-red-950 shadow-sm p-3 sm:p-4 border-b border-b-white sticky top-0 z-30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center justify-between">
@@ -46,6 +48,7 @@ export default function Games() {
               className="md:hidden bg-gray-100 p-2 rounded text-gray-600 hover:text-gray-800 transition"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle navigation"
+              aria-expanded={isMenuOpen}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -64,35 +67,38 @@ export default function Games() {
             </button>
 
             <nav
-              className={`absolute md:static top-16 left-0 z-20 w-full md:w-auto md:bg-transparent bg-red-950 
+              className={`absolute md:static top-16 left-0 z-20 w-full md:w-auto md:bg-transparent bg-red-950 shadow-lg md:shadow-none
         ${
           isMenuOpen ? "block" : "hidden"
-        } md:flex flex-col md:flex-row items-start md:items-center gap-4 p-4 md:p-0 text-white`}
+        } md:flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 p-4 md:p-0 text-white border-t border-white/20 md:border-0`}
             >
               {session ? (
                 <>
-                  <p className="text-sm font-medium mb-4 md:mb-0">
+                  <p className="text-sm font-medium mb-2 md:mb-0">
                     Welcome,{" "}
                     <span className="font-black">{session.user.name}</span>
                   </p>
                   {session.user.role === "admin" && (
                     <>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 mb-4">
+              <div className="flex flex-col sm:flex-row w-full md:w-auto items-stretch sm:items-center gap-2 sm:gap-3 mb-2 md:mb-0">
                         <a
                           href="/admin/award-points"
-                        className="w-full sm:w-auto bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black hover:text-white transition text-sm"
+                        onClick={closeMenu}
+                        className="w-full sm:w-auto bg-green-900 text-white px-4 py-2.5 rounded-md shadow hover:bg-black hover:text-white transition text-sm text-center"
                         >
                           Award Points
                         </a>
                         <a
                           href="/admin/add-games"
-                          className="w-full sm:w-auto bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black hover:text-white transition text-sm"
+                          onClick={closeMenu}
+                          className="w-full sm:w-auto bg-green-900 text-white px-4 py-2.5 rounded-md shadow hover:bg-black hover:text-white transition text-sm text-center"
                         >
                           Add Game
                         </a>
                         <a
                           href="/admin/archive"
-                          className="w-full sm:w-auto bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black hover:text-white transition text-sm"
+                          onClick={closeMenu}
+                          className="w-full sm:w-auto bg-green-900 text-white px-4 py-2.5 rounded-md shadow hover:bg-black hover:text-white transition text-sm text-center"
                         >
                           Archive Games
                         </a>
@@ -101,13 +107,17 @@ export default function Games() {
                   )}
                    <a
                     href="/leaderboard"
-                    className="w-full sm:mb-4 bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black transition text-sm text-center"
+                    onClick={closeMenu}
+                    className="w-full md:w-auto bg-green-900 text-white px-4 py-2.5 rounded-md shadow hover:bg-black transition text-sm text-center"
                   >
                     Leaderboard
                   </a>
                   <button
-                    onClick={onSignOut}
-                    className="w-full sm:w-auto bg-red-900 px-4 py-2 rounded-md shadow hover:bg-gray-900 transition text-sm"
+                    onClick={() => {
+                      closeMenu();
+                      onSignOut();
+                    }}
+                    className="w-full md:w-auto bg-red-900 px-4 py-2.5 rounded-md shadow hover:bg-gray-900 transition text-sm"
                   >
                     Sign Out
                   </button>
@@ -116,13 +126,15 @@ export default function Games() {
                 <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-2">
                   <a
                     href="/leaderboard"
-                    className="w-full sm:w-auto bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black transition text-sm text-center"
+                    onClick={closeMenu}
+                    className="w-full sm:w-auto bg-green-900 text-white px-4 py-2.5 rounded-md shadow hover:bg-black transition text-sm text-center"
                   >
                     Leaderboard
                   </a>
                   <a
                     href="/auth"
-                    className="w-full sm:w-auto bg-black text-white px-4 py-2 rounded-md shadow hover:bg-green-950 transition text-sm text-center"
+                    onClick={closeMenu}
+                    className="w-full sm:w-auto bg-black text-white px-4 py-2.5 rounded-md shadow hover:bg-green-950 transition text-sm text-center"
                   >
                     Sign in
                   </a>
