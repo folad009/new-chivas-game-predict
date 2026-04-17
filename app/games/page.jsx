@@ -99,6 +99,12 @@ export default function Games() {
                       </div>
                     </>
                   )}
+                   <a
+                    href="/leaderboard"
+                    className="w-full sm:w-auto bg-green-900 text-white px-4 py-2 rounded-md shadow hover:bg-black transition text-sm text-center"
+                  >
+                    Leaderboard
+                  </a>
                   <button
                     onClick={onSignOut}
                     className="w-full sm:w-auto bg-red-900 px-4 py-2 rounded-md shadow hover:bg-gray-900 transition text-sm"
