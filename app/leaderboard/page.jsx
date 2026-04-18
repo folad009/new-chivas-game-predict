@@ -30,11 +30,11 @@ const MenuButton = ({ onClick }) => (
 
 // Mobile menu for smaller screens
 const MobileMenu = ({ session }) => (
-  <nav className="md:hidden bg-white shadow-md rounded-md p-4 mt-2">
+  <nav className="md:hidden bg-white shadow-md rounded-md p-4 mt-2 text-gray-900">
     <div className="mt-4 text-center">
       {session ? (
         <>
-          <p className="text-sm font-medium mb-2">
+          <p className="text-sm font-medium mb-2 text-gray-900">
             Welcome, {session.user.name}
           </p>
           <button
@@ -49,7 +49,7 @@ const MobileMenu = ({ session }) => (
           </button>
         </>
       ) : (
-        <p className="text-sm font-medium mb-2">Not signed in</p>
+        <p className="text-sm font-medium mb-2 text-gray-900">Not signed in</p>
       )}
     </div>
   </nav>
@@ -203,7 +203,7 @@ export default function Leaderboard() {
         toggleMenu={toggleMenu}
         isAdmin={isAdmin}
       />
-      <main className="flex flex-col items-center justify-center min-h-screen px-4 py-8 sm:py-10 text-center bg-red-900">
+      <main className="flex flex-col items-center justify-center min-h-screen px-4 py-8 sm:py-10 text-center bg-red-900 text-white">
         <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-white">🏆 Leaderboard</h2>
 
         {/* Toggle between Half-Time and Full-Time */}
@@ -237,21 +237,21 @@ export default function Leaderboard() {
             placeholder="Search by name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-2.5 text-sm border border-white text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-green-900 focus:border-green-900"
+            className="w-full px-4 py-2.5 text-sm bg-white text-gray-900 placeholder:text-gray-500 border border-gray-300 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-green-900 focus:border-green-900"
           />
         </div>
 
-        {/* Leaderboard table */}
-        <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-3 sm:p-6 overflow-x-auto">
+        {/* Leaderboard table — explicit text color so body dark-mode foreground does not inherit onto white */}
+        <div className="w-full max-w-4xl bg-white text-gray-900 shadow-lg rounded-lg p-3 sm:p-6 overflow-x-auto">
           {currentData.length > 0 ? (
             <>
-              <table className="w-full min-w-[640px] text-left border-collapse text-sm">
+              <table className="w-full min-w-[640px] text-left border-collapse text-sm text-gray-900">
                 <thead>
                   <tr className="bg-gray-200">
-                    <th className="p-2 border">#</th>
-                    <th className="p-2 border">Name</th>
-                    <th className="p-2 border">Points</th>
-                    <th className="p-2 border">Prediction Time</th>
+                    <th className="p-2 border border-gray-300 font-semibold text-gray-900">#</th>
+                    <th className="p-2 border border-gray-300 font-semibold text-gray-900">Name</th>
+                    <th className="p-2 border border-gray-300 font-semibold text-gray-900">Points</th>
+                    <th className="p-2 border border-gray-300 font-semibold text-gray-900">Prediction Time</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -260,14 +260,14 @@ export default function Leaderboard() {
                       key={`${player.userId ?? "player"}-${startIndex + index}`}
                       className="hover:bg-gray-100"
                     >
-                      <td className="p-2 border">{startIndex + index + 1}</td>
-                      <td className="p-2 border">{player.userName}</td>
-                      <td className="p-2 border">
+                      <td className="p-2 border border-gray-300 text-gray-900">{startIndex + index + 1}</td>
+                      <td className="p-2 border border-gray-300 text-gray-900">{player.userName}</td>
+                      <td className="p-2 border border-gray-300 text-gray-900">
                         {view === "half-time"
                           ? `${player.halfTimePoints} points`
                           : `${player.fullTimePoints} points`}
                       </td>
-                      <td className="p-2 border text-black">
+                      <td className="p-2 border border-gray-300 text-gray-900">
                         {player.predictionTime}
                       </td>
                     </tr>
@@ -276,38 +276,41 @@ export default function Leaderboard() {
               </table>
 
               {/* Pagination controls */}
-              <div className="flex justify-center mt-4 space-x-2">
+              <div className="flex justify-center mt-4 flex-wrap gap-2 text-gray-900">
                 <button
+                  type="button"
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                  className="px-3 py-1.5 bg-gray-200 text-gray-900 rounded font-medium hover:bg-gray-300 disabled:opacity-50 disabled:hover:bg-gray-200"
                 >
                   Prev
                 </button>
                 {[...Array(totalPages)].map((_, i) => (
                   <button
+                    type="button"
                     key={i}
                     onClick={() => handlePageChange(i + 1)}
-                    className={`px-3 py-1 rounded ${
+                    className={`px-3 py-1.5 rounded font-medium ${
                       currentPage === i + 1
                         ? "bg-gray-900 text-white"
-                        : "bg-gray-200"
+                        : "bg-gray-200 text-gray-900 hover:bg-gray-300"
                     }`}
                   >
                     {i + 1}
                   </button>
                 ))}
                 <button
+                  type="button"
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                  className="px-3 py-1.5 bg-gray-200 text-gray-900 rounded font-medium hover:bg-gray-300 disabled:opacity-50 disabled:hover:bg-gray-200"
                 >
                   Next
                 </button>
               </div>
             </>
           ) : (
-            <p className="text-gray-500">No leaderboard data available.</p>
+            <p className="text-gray-600">No leaderboard data available.</p>
           )}
         </div>
 
